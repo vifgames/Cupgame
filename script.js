@@ -2,10 +2,10 @@ const colors = ["red", "blue", "yellow", "green", "purple"];
 let correctSequence = [];
 let playerSequence = [null, null, null, null, null];
 
-// Generate a random sequence
+// Generate a random correct sequence
 function generateCorrectSequence() {
     correctSequence = [...colors].sort(() => Math.random() - 0.5);
-    console.log("Correct sequence:", correctSequence); // Debugging
+    console.log("Correct sequence:", correctSequence);
 }
 
 // Create draggable cups
