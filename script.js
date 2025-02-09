@@ -1,4 +1,4 @@
-         const colors = ["red", "blue", "yellow", "green", "purple"];
+const colors = ["red", "blue", "yellow", "green", "purple"];
 let correctSequence = [];
 let playerSequence = [null, null, null, null, null];
 let submissionCount = 0;
@@ -11,95 +11,86 @@ const feedbackElement = document.getElementById("feedback");
 
 // Generate a random target (correct) sequence
 function generateCorrectSequence() {
-  correctSequence = [...colors].sort(() => Math.random() - 0.5);
-  console.log("Correct sequence:", correctSequence);
+    correctSequence = [...colors].sort(() => Math.random() - 0.5);
+    console.log("Correct sequence:", correctSequence);
 }
 
 // Create the cup elements and add them to the cups container
 function createCups() {
-  cupContainer.innerHTML = "";
-  colors.forEach((color) => {
-    let cup = document.createElement("div");
-    cup.classList.add("cup");
-    cup.style.backgroundColor = color;
-    cup.textContent = color;
-    cup.dataset.color = color;
-    cup.addEventListener("click", () => {
-      // Remove any previous selection
-      if (selectedCup) {
-        selectedCup.classList.remove("selected");
-      }
-      selectedCup = cup;
-      cup.classList.add("selected");
-    });
-    cupContainer.appendChild(cup);
-  });
-}
+    cupContainer.innerHTML = "";
+    colors.forEach((color) => {
+        let cup = document.createElement("div");
+        cup.classList.add("cup");
+        cup.style.backgroundColor = color;
+        cup.textContent = color;
+        cup.dataset.color = color;
 
-// Clear the current cup selection
-function clearSelection() {
-  if (selectedCup) {
-    selectedCup.classList.remove("selected");
-    selectedCup = null;
-  }
+        cup.addEventListener("click", () => {
+            if (selectedCup) {
+                selectedCup.classList.remove("selected");
+            }
+            selectedCup = cup;
+            cup.classList.add("selected");
+        });
+
+        cupContainer.appendChild(cup);
+    });
 }
 
 // Set up the slot click events
 slotElements.forEach((slot) => {
-  slot.addEventListener("click", () => {
-    const slotIndex = slot.dataset.index;
-    // If a cup is selected, move it into this slot
-    if (selectedCup) {
-      // If this slot already has a cup, remove that cup back to the cups area
-      if (slot.firstChild) {
-        const existingCup = slot.firstChild;
-        cupContainer.appendChild(existingCup);
-        playerSequence[slotIndex] = null;
-      }
-      // Move the selected cup into this slot
-      slot.appendChild(selectedCup);
-      playerSequence[slotIndex] = selectedCup.dataset.color;
-      selectedCup.classList.remove("selected");
-      selectedCup = null;
-    } else {
-      // If no cup is selected and the slot has a cup, remove it so it can be repositioned
-      if (slot.firstChild) {
-        const cupToRemove = slot.firstChild;
-        slot.removeChild(cupToRemove);
-        cupContainer.appendChild(cupToRemove);
-        playerSequence[slotIndex] = null;
-      }
-    }
-  });
+    slot.addEventListener("click", () => {
+        let slotIndex = slot.dataset.index;
+
+        if (selectedCup) {
+            if (slot.firstChild) {
+                // Swap the cups if slot is occupied
+                let existingCup = slot.firstChild;
+                slot.replaceChild(selectedCup, existingCup);
+                cupContainer.appendChild(existingCup);
+                playerSequence[slotIndex] = selectedCup.dataset.color;
+            } else {
+                // Move to empty slot
+                slot.appendChild(selectedCup);
+                playerSequence[slotIndex] = selectedCup.dataset.color;
+            }
+            selectedCup.classList.remove("selected");
+            selectedCup = null;
+        } else if (slot.firstChild) {
+            // If no cup is selected but slot has a cup, select it for moving
+            selectedCup = slot.firstChild;
+            selectedCup.classList.add("selected");
+        }
+    });
 });
 
-// When the user clicks "Submit Guess", increment the submission count and check the answer
+// When the user clicks "Submit Guess", count attempts & check correctness
 document.getElementById("submit").addEventListener("click", () => {
-  submissionCount++;
-  let correctCount = 0;
-  for (let i = 0; i < playerSequence.length; i++) {
-    if (playerSequence[i] === correctSequence[i]) {
-      correctCount++;
+    submissionCount++;
+    let correctCount = 0;
+    for (let i = 0; i < playerSequence.length; i++) {
+        if (playerSequence[i] === correctSequence[i]) {
+            correctCount++;
+        }
     }
-  }
-  feedbackElement.textContent = `Correctly placed cups: ${correctCount} | Submissions: ${submissionCount}`;
-  if (correctCount === colors.length) {
-    setTimeout(() => alert(`🎉 You Won in ${submissionCount} submissions! 🎉`), 300);
-  }
+    feedbackElement.textContent = `Correctly placed cups: ${correctCount} | Submissions: ${submissionCount}`;
+    if (correctCount === colors.length) {
+        setTimeout(() => alert(`🎉 You Won in ${submissionCount} submissions! 🎉`), 300);
+    }
 });
 
-// Restart the game: reset variables, clear cups and slots, and regenerate the game state
+// Restart the game: reset everything
 document.getElementById("restart").addEventListener("click", () => {
-  playerSequence = [null, null, null, null, null];
-  submissionCount = 0;
-  feedbackElement.textContent = `Correctly placed cups: 0 | Submissions: 0`;
-  cupContainer.innerHTML = "";
-  slotElements.forEach((slot) => {
-    slot.innerHTML = "";
-    slot.style.backgroundColor = "lightgray";
-  });
-  createCups();
-  generateCorrectSequence();
+    playerSequence = [null, null, null, null, null];
+    submissionCount = 0;
+    feedbackElement.textContent = `Correctly placed cups: 0 | Submissions: 0`;
+    cupContainer.innerHTML = "";
+    slotElements.forEach((slot) => {
+        slot.innerHTML = "";
+        slot.style.backgroundColor = "lightgray";
+    });
+    createCups();
+    generateCorrectSequence();
 });
 
 // Initialize the game
