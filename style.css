@@ -1,4 +1,4 @@
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -30,6 +30,7 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s, background 0.3s;
+    cursor: pointer;
 }
 
 .slot:hover {
@@ -40,7 +41,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    cursor: grab;
+    cursor: pointer;
     transition: transform 0.2s, box-shadow 0.3s;
     font-size: 14px;
     color: white;
@@ -51,7 +52,7 @@ body {
     justify-content: center;
 }
 
-.cup:active {
+.cup.selected {
     transform: scale(1.2);
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
