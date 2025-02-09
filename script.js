@@ -1,9 +1,7 @@
- const colors = ["red", "blue", "yellow", "green", "purple"];
+         const colors = ["red", "blue", "yellow", "green", "purple"];
 let correctSequence = [];
 let playerSequence = [null, null, null, null, null];
-
-let dragTimer = null; // Timer for press-and-hold
-let currentCup = null; // Track which cup is being held
+let selectedCup = null; // Stores the currently selected cup
 
 // 🎲 Generate Random Sequence
 function generateCorrectSequence() {
@@ -11,7 +9,7 @@ function generateCorrectSequence() {
     console.log("Correct sequence:", correctSequence);
 }
 
-// 🏆 Create Draggable Cups
+// 🏆 Create Clickable Cups
 function createCups() {
     const cupContainer = document.getElementById("cups");
     cupContainer.innerHTML = "";
@@ -22,61 +20,38 @@ function createCups() {
         cup.style.backgroundColor = color;
         cup.textContent = color;
         cup.dataset.color = color;
-        cup.draggable = false; // Initially NOT draggable
 
-        // 🕐 Press-and-Hold to Drag
-        cup.addEventListener("mousedown", (e) => {
-            dragTimer = setTimeout(() => {
-                cup.draggable = true; // Enable dragging after 1 second
-                currentCup = cup; // Store current cup
-                cup.style.transform = "scale(1.2)";
-            }, 1000); // 1 second hold
-        });
-
-        // 🛑 Cancel if Released Early
-        cup.addEventListener("mouseup", () => {
-            clearTimeout(dragTimer);
-        });
-
-        cup.addEventListener("dragstart", (e) => {
-            if (cup.draggable) {
-                e.dataTransfer.setData("color", cup.dataset.color);
-                console.log("Dragging:", cup.dataset.color);
-            } else {
-                e.preventDefault(); // Stop dragging if not held long enough
+        // 📌 Click to Select a Cup
+        cup.addEventListener("click", () => {
+            if (selectedCup) {
+                selectedCup.classList.remove("selected"); // Remove previous selection
             }
-        });
-
-        cup.addEventListener("dragend", () => {
-            cup.style.transform = "scale(1)";
-            cup.draggable = false; // Reset dragging after drop
+            selectedCup = cup;
+            cup.classList.add("selected"); // Highlight selected cup
         });
 
         cupContainer.appendChild(cup);
     });
 }
 
-// 🏗️ Setup Drop Slots
+// 🏗️ Setup Clickable Slots
 document.querySelectorAll(".slot").forEach(slot => {
-    slot.addEventListener("dragover", (e) => {
-        e.preventDefault();
-    });
+    slot.addEventListener("click", () => {
+        if (selectedCup) {
+            let color = selectedCup.dataset.color;
 
-    slot.addEventListener("drop", (e) => {
-        e.preventDefault();
-        let color = e.dataTransfer.getData("color");
-
-        if (color && currentCup) {
+            // ✅ Move the Cup to the Selected Slot
             slot.style.backgroundColor = color;
             slot.dataset.color = color;
 
             let index = slot.dataset.index;
-            playerSequence[index] = color; // Store the dropped color
+            playerSequence[index] = color; // Store the moved color
 
-            console.log(`Dropped ${color} into slot ${index}`);
+            console.log(`Moved ${color} to slot ${index}`);
 
-            currentCup.style.display = "none"; // Hide the cup after dropping
-            currentCup = null; // Reset current cup
+            // ❌ Remove the cup after placing it
+            selectedCup.remove();
+            selectedCup = null;
         }
     });
 });
