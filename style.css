@@ -1,80 +1,86 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #1e1e2f, #3a3a57);
-    color: white;
-    text-align: center;
-    padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e1e2f, #3a3a57);
+  color: white;
+  text-align: center;
+  padding: 20px;
 }
 
 #game-container {
-    width: 90%;
-    max-width: 500px;
-    margin: auto;
+  width: 90%;
+  max-width: 500px;
+  margin: auto;
 }
 
-#slots, #cups {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
+#slots,
+#cups {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .slot {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, background 0.3s;
-    cursor: pointer;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: lightgray;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background 0.3s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slot:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .cup {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.3s;
-    font-size: 14px;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cup.selected {
-    transform: scale(1.2);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+  transform: scale(1.2);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
 button {
-    padding: 12px 25px;
-    font-size: 18px;
-    background: #ff4757;
-    border: none;
-    border-radius: 25px;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 10px;
+  padding: 12px 25px;
+  font-size: 18px;
+  background: #ff4757;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
 }
 
 button:hover {
-    background: #ff6b81;
+  background: #ff6b81;
 }
 
 #feedback {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
 }
+
+
