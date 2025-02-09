@@ -1,13 +1,11 @@
-const colors = ["red", "blue", "yellow", "green", "purple"];
+ const colors = ["red", "blue", "yellow", "green", "purple"];
 let correctSequence = [];
 let playerSequence = [null, null, null, null, null];
 
-// 🎵 Load Sound Effects
-const dragSound = new Audio("drag.mp3");
-const dropSound = new Audio("drop.mp3");
-const winSound = new Audio("win.mp3");
+let dragTimer = null; // Timer for press-and-hold
+let currentCup = null; // Track which cup is being held
 
-// 🎲 Generate a Random Correct Sequence
+// 🎲 Generate Random Sequence
 function generateCorrectSequence() {
     correctSequence = [...colors].sort(() => Math.random() - 0.5);
     console.log("Correct sequence:", correctSequence);
@@ -23,20 +21,35 @@ function createCups() {
         cup.classList.add("cup");
         cup.style.backgroundColor = color;
         cup.textContent = color;
-        cup.draggable = true;
         cup.dataset.color = color;
+        cup.draggable = false; // Initially NOT draggable
 
-        // 🎵 Play sound on drag
-        cup.addEventListener("dragstart", (e) => {
-            e.dataTransfer.setData("color", color);
-            cup.style.opacity = "0.5";
-            cup.style.transform = "scale(1.2)";
-            dragSound.play();
+        // 🕐 Press-and-Hold to Drag
+        cup.addEventListener("mousedown", (e) => {
+            dragTimer = setTimeout(() => {
+                cup.draggable = true; // Enable dragging after 1 second
+                currentCup = cup; // Store current cup
+                cup.style.transform = "scale(1.2)";
+            }, 1000); // 1 second hold
         });
 
-        cup.addEventListener("dragend", (e) => {
-            cup.style.opacity = "1";
+        // 🛑 Cancel if Released Early
+        cup.addEventListener("mouseup", () => {
+            clearTimeout(dragTimer);
+        });
+
+        cup.addEventListener("dragstart", (e) => {
+            if (cup.draggable) {
+                e.dataTransfer.setData("color", cup.dataset.color);
+                console.log("Dragging:", cup.dataset.color);
+            } else {
+                e.preventDefault(); // Stop dragging if not held long enough
+            }
+        });
+
+        cup.addEventListener("dragend", () => {
             cup.style.transform = "scale(1)";
+            cup.draggable = false; // Reset dragging after drop
         });
 
         cupContainer.appendChild(cup);
@@ -45,17 +58,25 @@ function createCups() {
 
 // 🏗️ Setup Drop Slots
 document.querySelectorAll(".slot").forEach(slot => {
-    slot.addEventListener("dragover", (e) => e.preventDefault());
+    slot.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
 
     slot.addEventListener("drop", (e) => {
         e.preventDefault();
         let color = e.dataTransfer.getData("color");
 
-        if (color) {
+        if (color && currentCup) {
             slot.style.backgroundColor = color;
             slot.dataset.color = color;
-            playerSequence[slot.dataset.index] = color;
-            dropSound.play();
+
+            let index = slot.dataset.index;
+            playerSequence[index] = color; // Store the dropped color
+
+            console.log(`Dropped ${color} into slot ${index}`);
+
+            currentCup.style.display = "none"; // Hide the cup after dropping
+            currentCup = null; // Reset current cup
         }
     });
 });
@@ -66,7 +87,6 @@ document.getElementById("submit").addEventListener("click", () => {
     document.getElementById("feedback").textContent = `Correctly placed cups: ${correctCount}`;
 
     if (correctCount === 5) {
-        winSound.play();
         setTimeout(() => alert("🎉 You Won! 🎉"), 300);
     }
 });
