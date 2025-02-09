@@ -1,4 +1,4 @@
-    const colors = ["red", "blue", "yellow", "green", "purple"];
+const colors = ["red", "blue", "yellow", "green", "purple"];
 let correctSequence = [];
 let playerSequence = [null, null, null, null, null];
 let submissionCount = 0;
@@ -48,7 +48,6 @@ slotElements.forEach((slot) => {
                 let existingCup = slot.firstChild;
                 slot.replaceChild(selectedCup, existingCup);
                 existingCup.classList.remove("selected");
-                cupContainer.appendChild(existingCup);
             } else {
                 // Move the selected cup to an empty slot
                 slot.appendChild(selectedCup);
@@ -56,10 +55,6 @@ slotElements.forEach((slot) => {
             playerSequence[slotIndex] = selectedCup.dataset.color;
             selectedCup.classList.remove("selected");
             selectedCup = null;
-        } else if (slot.firstChild) {
-            // Select the cup in the slot (without moving it)
-            selectedCup = slot.firstChild;
-            selectedCup.classList.add("selected");
         }
     });
 });
